@@ -109,7 +109,7 @@ comparacao_inicio_cliente = conexao.sql(
 comparacao_inicio_cliente.show()
 
 # Validação se a primeira data válida do segmento é igual à data de início do cliente
-# Esta consulta retorna verdadeiro se todos os clientes tiverem a primeira data válida do segmento igual à data de início, caso contrário, retorna falso.   
+# Esta consulta retorna verdadeiro se todos os clientes tiverem a primeira data válida do segmento igual à data de início, caso contrário, retorna falso.
 validacao_inicio_cliente = conexao.sql(
     """
     WITH primeiro_valido_de AS (
@@ -171,7 +171,7 @@ comparacao_segmento_recente = conexao.sql(
 comparacao_segmento_recente.show()
 
 # Validação se todos os clientes possuem o segmento mais recente igual ao segmento atual
-# Esta consulta retorna verdadeiro se todos os clientes tiverem o segmento mais recente igual ao segmento atual, caso contrário, retorna falso. 
+# Esta consulta retorna verdadeiro se todos os clientes tiverem o segmento mais recente igual ao segmento atual, caso contrário, retorna falso.
 validacao_segmento_recente = conexao.sql(
     """
     WITH historico_ordenado AS (
@@ -271,9 +271,6 @@ existe_razao_social_duplicada = conexao.sql(
 )
 
 existe_razao_social_duplicada.show()
-
-
-
 
 
 # %%

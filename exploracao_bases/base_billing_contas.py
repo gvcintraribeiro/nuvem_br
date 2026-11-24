@@ -47,7 +47,6 @@ dados_faltantes_billing_contas = conexao.sql(
 )
 
 
-
 dados_faltantes_billing_contas.show()
 
 # %%
@@ -228,5 +227,5 @@ print(f"Arquivo salvo em: {caminho_csv_saida}")
 
 # Conclusão: O arquivo com a base cruzada foi salvo na pasta "outputs".
 # Existem CNPJ preenchidos que estavam em outtro formato, provavelmente eram dados com campo aberto e sem validação
-# Existem 6 registros de cliente_id incorretos, que foram encontrados cruzando os cnpjs normalizados, porem não existia 
+# Existem 6 registros de cliente_id incorretos, que foram encontrados cruzando os cnpjs normalizados, porem não existia
 # nenhum preenchido e incorreto.
