@@ -9,3 +9,6 @@ data/
 
 # Virtual environments
 .venv
+
+# Generated analysis outputs
+outputs/
