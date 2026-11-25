@@ -122,6 +122,34 @@ comparacao_creditos = conexao.sql(
 
 comparacao_creditos.show()
 
+# %%
+# Calcula valor_bruto - valor_creditos e compara com valor_liquido da própria fatura.
+# Traz apenas os registros distintos em que há diferença (ignora faturas canceladas).
+faturas_diferenca_liquido = conexao.sql(
+    """
+    SELECT DISTINCT
+        fatura_id,
+        conta_id,
+        competencia,
+        CAST(valor_bruto AS DECIMAL(18, 2)) AS valor_bruto,
+        CAST(valor_creditos AS DECIMAL(18, 2)) AS valor_creditos,
+        CAST(valor_liquido AS DECIMAL(18, 2)) AS valor_liquido,
+        CAST(valor_bruto AS DECIMAL(18, 2))
+            - CAST(valor_creditos AS DECIMAL(18, 2)) AS valor_bruto_menos_creditos,
+        CAST(valor_liquido AS DECIMAL(18, 2))
+            - (CAST(valor_bruto AS DECIMAL(18, 2))
+               - CAST(valor_creditos AS DECIMAL(18, 2))) AS diferenca
+    FROM read_csv_auto(?)
+    WHERE status != 'CANCELADA'
+      AND CAST(valor_liquido AS DECIMAL(18, 2))
+          != CAST(valor_bruto AS DECIMAL(18, 2)) - CAST(valor_creditos AS DECIMAL(18, 2))
+    ORDER BY fatura_id
+    """,
+    params=[str(faturas_path)],
+)
+
+faturas_diferenca_liquido.show()
+
 
 # %%
 # Agrupa as faturas por status e traz os totais solicitados.
