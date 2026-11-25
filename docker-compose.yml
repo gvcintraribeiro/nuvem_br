@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: nuvem_br_postgres
+    environment:
+      POSTGRES_USER: nuvem
+      POSTGRES_PASSWORD: nuvem_local
+      POSTGRES_DB: nuvem_br
+    ports:
+      # Exposto apenas na máquina local.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Scripts .sql desta pasta rodam na primeira criação do banco (DDL de referência).
+      - ./sql:/docker-entrypoint-initdb.d:ro
+      # CSVs disponíveis dentro do container em /data (para COPY).
+      - ./data:/data:ro
+    restart: unless-stopped
+
+volumes:
+  pgdata:
