@@ -90,7 +90,8 @@ comparacao_creditos = conexao.sql(
             competencia,
             SUM(CAST(valor AS DECIMAL(18, 2))) AS valor_creditos_creditos
         FROM read_csv_auto(?)
-        GROUP BY conta_id, competencia
+        GROUP BY 1,2
+        
     ),
     creditos_por_fatura AS (
         SELECT
@@ -100,79 +101,27 @@ comparacao_creditos = conexao.sql(
         FROM read_csv_auto(?)
         WHERE CAST(valor_creditos AS DECIMAL(18, 2)) > 0
           AND status != 'CANCELADA'
-        GROUP BY conta_id, competencia
+        GROUP BY 1,2
+        
     )
-    SELECT
-        COALESCE(f.conta_id, c.conta_id) AS conta_id,
-        COALESCE(f.competencia, c.competencia) AS competencia,
-        c.valor_creditos_creditos,
-        f.valor_creditos_faturas,
-        CASE
-            WHEN c.conta_id IS NULL THEN 'somente_na_fatura'
-            WHEN f.conta_id IS NULL THEN 'somente_no_creditos'
-            WHEN c.valor_creditos_creditos != f.valor_creditos_faturas THEN 'valores_diferentes'
-            ELSE 'valores_iguais'
-        END AS status
-    FROM creditos_por_fatura f
-    FULL OUTER JOIN creditos_por_conta_competencia c
-        ON f.conta_id = c.conta_id
-       AND f.competencia = c.competencia
-    WHERE c.conta_id IS NULL
-       OR f.conta_id IS NULL
-       OR c.valor_creditos_creditos != f.valor_creditos_faturas
-    ORDER BY conta_id, competencia
+        SELECT 
+
+        *,
+        valor_creditos_creditos - valor_creditos_faturas
+
+        FROM creditos_por_conta_competencia AS c
+
+        LEFT JOIN creditos_por_fatura AS f
+        ON c.conta_id = f.conta_id
+        AND c.competencia = f.competencia 
+
+        WHERE c.valor_creditos_creditos != f.valor_creditos_faturas
     """,
     params=[str(creditos_path), str(faturas_path)],
 )
 
 comparacao_creditos.show()
 
-resumo_comparacao_creditos = conexao.sql(
-    """
-    WITH creditos_por_conta_competencia AS (
-        SELECT
-            conta_id,
-            competencia,
-            SUM(CAST(valor AS DECIMAL(18, 2))) AS valor_creditos_creditos
-        FROM read_csv_auto(?)
-        GROUP BY conta_id, competencia
-    ),
-    creditos_por_fatura AS (
-        SELECT
-            conta_id,
-            competencia,
-            SUM(CAST(valor_creditos AS DECIMAL(18, 2))) AS valor_creditos_faturas
-        FROM read_csv_auto(?)
-        WHERE CAST(valor_creditos AS DECIMAL(18, 2)) > 0
-          AND status != 'CANCELADA'
-        GROUP BY conta_id, competencia
-    ),
-    comparacao AS (
-        SELECT
-            CASE
-                WHEN c.conta_id IS NULL THEN 'somente_na_fatura'
-                WHEN f.conta_id IS NULL THEN 'somente_no_creditos'
-                ELSE 'valores_diferentes'
-            END AS status
-        FROM creditos_por_fatura f
-        FULL OUTER JOIN creditos_por_conta_competencia c
-            ON f.conta_id = c.conta_id
-           AND f.competencia = c.competencia
-        WHERE c.conta_id IS NULL
-           OR f.conta_id IS NULL
-           OR c.valor_creditos_creditos != f.valor_creditos_faturas
-    )
-    SELECT
-        status,
-        COUNT(*) AS quantidade
-    FROM comparacao
-    GROUP BY status
-    ORDER BY status
-    """,
-    params=[str(creditos_path), str(faturas_path)],
-)
-
-resumo_comparacao_creditos.show()
 
 # %%
 # Agrupa as faturas por status e traz os totais solicitados.
