@@ -164,7 +164,6 @@ O código de saída é `1` se alguma validação falhar, o que permite agendar a
 ```text
 nuvem_br/
 ├── data/                           # Arquivos CSV brutos fornecidos
-├── exploracao_bases/               # Estudos exploratórios das bases válidas
 ├── exploracao_erro_bases/          # Investigação de inconsistências e problemas
 ├── nuvem_br/                       # Código Python do pipeline
 │   ├── config.py                   # Configuração de caminhos e conexão DuckDB
