@@ -3,27 +3,19 @@
 # unidades por produto e lotes possivelmente duplicados.
 
 # %%
+import sys
 from pathlib import Path
 
 import duckdb
 
-
-# %%
-def ler_csv(
-    conexao: duckdb.DuckDBPyConnection, caminho_csv: Path
-) -> duckdb.DuckDBPyRelation:
-    return conexao.sql("SELECT * FROM read_csv_auto(?)", params=[str(caminho_csv)])
-
+# Permite importar exploracao_erro_bases também ao rodar o arquivo direto (uv run arquivo.py).
+sys.path.insert(0, str(Path.cwd()))
+from exploracao_erro_bases.utils.leitura_csv import carregar_csvs
 
 # %%
 pasta_dados = Path("data")
 conexao = duckdb.connect()
-arquivos_csv = sorted(pasta_dados.glob("*.csv"))
-
-dados_por_arquivo = {}
-
-for caminho_csv in arquivos_csv:
-    dados_por_arquivo[caminho_csv.stem] = ler_csv(conexao, caminho_csv)
+dados_por_arquivo = carregar_csvs(conexao, pasta_dados)
 
 # %%
 # Registra cada CSV já lido (dados_por_arquivo) como view, para não repetir
