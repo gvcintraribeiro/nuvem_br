@@ -165,6 +165,7 @@ O código de saída é `1` se alguma validação falhar, o que permite agendar a
 nuvem_br/
 ├── data/                           # Arquivos CSV brutos fornecidos
 ├── exploracao_erro_bases/          # Investigação de inconsistências e problemas
+│   └── outputs/                    # Arquivos gerados pelas análises (ignorado pelo Git)
 ├── src/nuvem_br/                   # Código Python do pipeline
 │   ├── main.py                     # Orquestração completa do pipeline
 │   ├── config.py                   # Configuração de caminhos e conexão
@@ -175,7 +176,6 @@ nuvem_br/
 │   └── sql/
 │       ├── 00_ddl_postgres.sql     # DDL de referência
 │       └── camada_consumo/         # Views do schema mart
-├── outputs/                        # Arquivos gerados pelas análises
 ├── pyproject.toml                  # Dependências e configuração do projeto
 ├── uv.lock                         # Lock das dependências
 └── README.md                       # Documentação do projeto

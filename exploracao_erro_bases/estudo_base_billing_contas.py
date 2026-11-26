@@ -213,7 +213,7 @@ resumo_comparacao_cliente_id.show()
 
 # %%
 # Exporta a base cruzada para uma pasta ignorada pelo Git.
-outputs_path = Path("outputs")
+outputs_path = Path("exploracao_erro_bases/outputs")
 outputs_path.mkdir(exist_ok=True)
 
 caminho_csv_saida = outputs_path / "clientes_billing_com_cnpj.csv"
@@ -225,7 +225,7 @@ conexao.sql(
 
 print(f"Arquivo salvo em: {caminho_csv_saida}")
 
-# Conclusão: O arquivo com a base cruzada foi salvo na pasta "outputs".
+# Conclusão: O arquivo com a base cruzada foi salvo na pasta "exploracao_erro_bases/outputs".
 # Existem CNPJ preenchidos que estavam em outtro formato, provavelmente eram dados com campo aberto e sem validação
 # Existem 6 registros de cliente_id incorretos, que foram encontrados cruzando os cnpjs normalizados, porem não existia
 # nenhum preenchido e incorreto.

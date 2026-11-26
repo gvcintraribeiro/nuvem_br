@@ -77,7 +77,7 @@ O uso de IA é permitido e esperado. O log de uso de IA (máx. 1 página) deve c
 - Os estudos exploratórios ficam em `exploracao_bases/` e `exploracao_erro_bases/`, em arquivos `.py` com células `# %%` (execução interativa, sem `if __name__ == "__main__"`).
 - Estrutura padrão de cada estudo: função `ler_csv`, carga de todos os CSVs de `data/` em `dados_por_arquivo`, depois consultas em células separadas, cada uma com comentário explicando o objetivo.
 - Código simples, com poucas validações e sem abstrações desnecessárias.
-- Saídas geradas ficam em `outputs/` (já no `.gitignore`, assim como `data/`).
+- Saídas geradas pelos estudos ficam em `exploracao_erro_bases/outputs/` (já no `.gitignore`, assim como `data/`).
 - Nas análises de faturas, ignorar `status = 'CANCELADA'`.
 
 ## Achados já levantados (verificados nos dados)
