@@ -17,10 +17,10 @@ Este projeto:
 | **Google Sheets + Gemini** | Análise exploratória inicial, aproveitando o baixo volume de registros. |
 | **DuckDB** | Engine analítica local: lê os CSVs direto (`read_csv_auto`), valida os erros com SQL e faz as transformações. |
 | **PostgreSQL 16** | Banco onde o star schema é carregado e consumido pelas views e pelo BI. |
-| **Docker Compose** | Sobe o Postgres local e executa o DDL de referência (`sql/00_ddl_postgres.sql`). |
+| **Docker Compose** | Sobe o Postgres local e executa o DDL de referência (`src/nuvem_br/sql/00_ddl_postgres.sql`). |
 | **SQLAlchemy** | Define o modelo (`src/nuvem_br/models.py`), cria as tabelas e faz a carga no Postgres. |
 | **psycopg** | Driver de conexão do Python com o Postgres. |
-| **uv** | Gerência de dependências e ambiente virtual (`uv run main.py`). |
+| **uv** | Gerência de dependências e ambiente virtual (`uv run python -m nuvem_br.main`). |
 | **Black** | Formatação do código Python (grupo `dev`). |
 | **Claude (Copilot)** | Apoio na modelagem, na implementação e na revisão. Ver o log de uso de IA. |
 
@@ -50,11 +50,11 @@ Com os problemas confirmados, foi elaborado o relatório de anomalias (problema,
 
 Entendidos os problemas e já familiarizado com os dados, o star schema foi desenhado em conjunto com o Claude. A proposta inicial foi usar o DuckDB para transformar os dados, pois já fazia parte da stack, e o SQLAlchemy como engine para alimentar o Postgres com os dados já validados.
 
-Fluxo do pipeline (`main.py`):
+Fluxo do pipeline (`src/nuvem_br/main.py`):
 
 ```
 CSVs (data/) -> DuckDB (limpeza e transformação) -> Postgres (schema dw, via SQLAlchemy)
-             -> views da camada de consumo (sql/camada_consumo) -> validações
+             -> views da camada de consumo (src/nuvem_br/sql/camada_consumo) -> validações
 ```
 
 ## Star Schema — NuvemBR
@@ -154,7 +154,7 @@ erDiagram
 ```bash
 docker compose up -d      # sobe o Postgres
 uv sync                   # instala as dependências
-uv run main.py            # transforma, carrega, aplica as views e valida
+uv run python -m nuvem_br.main   # transforma, carrega, aplica as views e valida
 ```
 
 O código de saída é `1` se alguma validação falhar, o que permite agendar a execução em cron ou Airflow.
@@ -165,17 +165,17 @@ O código de saída é `1` se alguma validação falhar, o que permite agendar a
 nuvem_br/
 ├── data/                           # Arquivos CSV brutos fornecidos
 ├── exploracao_erro_bases/          # Investigação de inconsistências e problemas
-├── nuvem_br/                       # Código Python do pipeline
-│   ├── config.py                   # Configuração de caminhos e conexão DuckDB
-│   ├── load.py                     # Criação das tabelas e aplicação da camada de consumo
+├── src/nuvem_br/                   # Código Python do pipeline
+│   ├── main.py                     # Orquestração completa do pipeline
+│   ├── config.py                   # Configuração de caminhos e conexão
+│   ├── load.py                     # Carga e aplicação da camada de consumo
 │   ├── models.py                   # DDL e criação das tabelas
 │   ├── transform.py                # Limpeza, padronização e transformação dos CSVs
-│   └── validate.py                 # Validações e testes de qualidade
-├── sql/
-│   ├── 00_ddl_postgres.sql         # DDL de referência
-│   └── 01_consumo.sql              # Modelo dimensional e métricas de consumo
+│   ├── validate.py                 # Validações e testes de qualidade
+│   └── sql/
+│       ├── 00_ddl_postgres.sql     # DDL de referência
+│       └── camada_consumo/         # Views do schema mart
 ├── outputs/                        # Arquivos gerados pelas análises
-├── main.py                         # Orquestração completa do pipeline
 ├── pyproject.toml                  # Dependências e configuração do projeto
 ├── uv.lock                         # Lock das dependências
 └── README.md                       # Documentação do projeto

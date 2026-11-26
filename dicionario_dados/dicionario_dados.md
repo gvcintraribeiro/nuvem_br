@@ -332,7 +332,7 @@ O DW está no schema `dw` do PostgreSQL e foi modelado em `src/nuvem_br/models.p
 
 ## 5. Views da camada gerencial
 
-As views ficam no schema `mart` e são criadas pelo script `sql/camada_consumo/01_views_diretoria.sql`.
+As views ficam no schema `mart` e são criadas pelo script `src/nuvem_br/sql/camada_consumo/01_views_diretoria.sql`.
 
 ### 5.1 `mart.vw_receita_mensal`
 
@@ -547,20 +547,20 @@ flowchart LR
 
 | Componente | Responsabilidade |
 |---|---|
-| `main.py` | Orquestra criação, transformação, carga, views e validação. |
+| `src/nuvem_br/main.py` | Orquestra criação, transformação, carga, views e validação. |
 | `src/nuvem_br/transform.py` | Lê os CSVs e aplica regras de qualidade/modelagem. |
 | `src/nuvem_br/models.py` | Declara tabelas, tipos, PKs, FKs e índices do DW. |
 | `src/nuvem_br/load.py` | Executa a carga idempotente e aplica os scripts de consumo. |
 | `src/nuvem_br/validate.py` | Valida contagens, totais, reconciliação e chaves órfãs. |
-| `sql/camada_consumo/01_views_diretoria.sql` | Cria as views gerenciais do schema `mart`. |
+| `src/nuvem_br/sql/camada_consumo/01_views_diretoria.sql` | Cria as views gerenciais do schema `mart`. |
 
 ---
 
 ## 9. Referências
 
-- DDL de referência das fontes: [`../sql/00_ddl_postgres.sql`](../sql/00_ddl_postgres.sql)
+- DDL de referência das fontes: [`../src/nuvem_br/sql/00_ddl_postgres.sql`](../src/nuvem_br/sql/00_ddl_postgres.sql)
 - Modelo SQLAlchemy do DW: [`../src/nuvem_br/models.py`](../src/nuvem_br/models.py)
 - Transformações: [`../src/nuvem_br/transform.py`](../src/nuvem_br/transform.py)
 - Carga: [`../src/nuvem_br/load.py`](../src/nuvem_br/load.py)
 - Validações: [`../src/nuvem_br/validate.py`](../src/nuvem_br/validate.py)
-- Views gerenciais: [`../sql/camada_consumo/01_views_diretoria.sql`](../sql/camada_consumo/01_views_diretoria.sql)
+- Views gerenciais: [`../src/nuvem_br/sql/camada_consumo/01_views_diretoria.sql`](../src/nuvem_br/sql/camada_consumo/01_views_diretoria.sql)

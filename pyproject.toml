@@ -16,7 +16,7 @@ dev = [
     "black>=26.10.1",
 ]
 
-# Layout src/: torna o pacote nuvem_br importável (uv run main.py).
+# Layout src/: torna o pacote nuvem_br importável (uv run python -m nuvem_br.main).
 [build-system]
 requires = ["uv_build>=0.11,<0.12"]
 build-backend = "uv_build"

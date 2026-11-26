@@ -14,7 +14,7 @@ Não há lista de perguntas fechada. Parte do desafio é traduzir o pedido em KP
 
 ## Dados fornecidos
 
-7 CSVs em `data/`, extraídos de três sistemas não integrados, cobrindo **jan a out/2026**. São extrações brutas: **não assumir que estão corretos**. Engine usado no projeto: **DuckDB**. O DDL de referência está em `sql/00_ddl_postgres.sql`.
+7 CSVs em `data/`, extraídos de três sistemas não integrados, cobrindo **jan a out/2026**. São extrações brutas: **não assumir que estão corretos**. Engine usado no projeto: **DuckDB**. O DDL de referência está em `src/nuvem_br/sql/00_ddl_postgres.sql`.
 
 | Arquivo | Sistema | Grão | Linhas |
 |---|---|---|---|

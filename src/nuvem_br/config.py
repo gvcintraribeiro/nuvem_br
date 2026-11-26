@@ -20,7 +20,8 @@ PASTA_DADOS = Path(os.environ.get("NUVEM_DADOS", "data"))
 
 # Scripts SQL da camada de consumo (views do schema mart). Fica em subpasta para não
 # ser executado pelo initdb do container (que só lê os .sql da raiz de sql/).
-PASTA_CAMADA_CONSUMO = Path("sql/camada_consumo")
+# O caminho é relativo a este arquivo, então não depende do diretório de execução.
+PASTA_CAMADA_CONSUMO = Path(__file__).parent / "sql" / "camada_consumo"
 
 
 def url_conexao() -> URL:

@@ -12,7 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       # Scripts .sql desta pasta rodam na primeira criação do banco (DDL de referência).
-      - ./sql:/docker-entrypoint-initdb.d:ro
+      - ./src/nuvem_br/sql:/docker-entrypoint-initdb.d:ro
       # CSVs disponíveis dentro do container em /data (para COPY).
       - ./data:/data:ro
     restart: unless-stopped
