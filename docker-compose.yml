@@ -17,5 +17,21 @@ services:
       - ./data:/data:ro
     restart: unless-stopped
 
+  metabase:
+    image: metabase/metabase:latest
+    container_name: nuvem_br_metabase
+    depends_on:
+      - postgres
+    ports:
+      # Exposto apenas na máquina local: http://localhost:3000
+      - "127.0.0.1:3000:3000"
+    volumes:
+      # Metadados do Metabase (usuários, dashboards, perguntas) em H2; uso local.
+      - metabase_data:/metabase-data
+    environment:
+      MB_DB_FILE: /metabase-data/metabase.db
+    restart: unless-stopped
+
 volumes:
   pgdata:
+  metabase_data:
