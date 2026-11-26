@@ -1,5 +1,17 @@
 # NuvemBR — Case técnico: Analista de Dados Sênior
 
+## Entregáveis
+
+| Item | Formato | Observação | Link |
+|---|---|---|---|
+| Scripts SQL (tarefas 2 e 3) | `.sql` comentado | Engine: PostgreSQL 16 (camada de consumo e DDL) e DuckDB (investigação de qualidade e reconciliação) | [Camada de consumo (views `mart`)](src/nuvem_br/sql/camada_consumo/01_views_diretoria.sql), [DDL de referência](src/nuvem_br/sql/00_ddl_postgres.sql), [Consultas de qualidade e reconciliação (DuckDB)](exploracao_erro_bases/), [Consultas do painel](metabase/) |
+| Modelo dimensional | Diagrama Mermaid | Com o grão de cada fato explícito | [Star Schema — NuvemBR](#star-schema--nuvembr) |
+| Relatório executivo | PDF, até 3 páginas | Resposta à diretoria: 3 a 5 achados, recomendações e premissas | [Relatório Executivo de Receita](relatorio_executivo_receita/NuvemBR%20%E2%80%94%20Relat%C3%B3rio%20Executivo%20de%20Receita.pdf) |
+| Relatório de anomalias | PDF | Problema, evidência, impacto em R$, tratamento, dono | [Relatório de anomalias](relatorio_anomalias/Relat%C3%B3rio%20de%20anomalias.pdf) |
+| Dicionário e linhagem | Markdown | Para as métricas entregues | [Dicionário de dados e linhagem](dicionario_dados/dicionario_dados.md) |
+| Painel executivo | Metabase (PDFs exportados do painel) + consultas SQL | Lógica das medidas em SQL, nas pastas `estudo_receita`, `estudo_clientes` e `estudo_consumo` | [Painel, parte 1](metabase/dashboard/Metabase%20-%20Dashboard%20nuvembr%20Acompanhamento-1.pdf), [parte 2](metabase/dashboard/Metabase%20-%20Dashboard%20nuvembr%20Acompanhamento-2.pdf), [parte 3](metabase/dashboard/Metabase%20-%20Dashboard%20nuvembr%20Acompanhamento-3.pdf), [Consultas SQL](metabase/) |
+| Log de uso de IA | Markdown | Prompts de maior impacto e histórico completo das conversas | [Prompts mais importantes](logs/prompts_importantes.md), [Conversas com o Copilot](logs/conversas_copilot.md) |
+
 ## Objetivo
 
 A NuvemBR é uma provedora fictícia de nuvem pública (computação, armazenamento, banco de dados e Kubernetes cobrados por consumo, em reais). A diretoria pediu uma **visão única e confiável de faturamento**: saber se a empresa cresce de forma saudável e onde está perdendo receita, já que cada área trazia um número diferente.
