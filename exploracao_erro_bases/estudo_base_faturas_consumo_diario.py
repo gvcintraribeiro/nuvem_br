@@ -37,8 +37,7 @@ for nome, relacao in dados_por_arquivo.items():
 #    mais de um lote. Mantém só a carga mais recente (carregado_em).
 # 2) Unidade: OBJECT_STORAGE chega em GB-dia e em TB-dia, mas o preço é por GB-dia.
 #    Converte TB-dia para GB-dia (fator 1024, o que fez as faturas baterem).
-conexao.sql(
-    """
+conexao.sql("""
     CREATE OR REPLACE VIEW consumo_tratado AS
     SELECT
         conta_id,
@@ -53,16 +52,14 @@ conexao.sql(
         PARTITION BY data, conta_id, produto, regiao
         ORDER BY carregado_em DESC
     ) = 1
-    """
-)
+    """)
 
 # %%
 # Conciliação mensal por conta: valor medido (consumo) x valor faturado (bruto).
 # - Faturas CANCELADAS ficam fora (a substituta já está nas faturas ativas).
 # - FULL JOIN para não perder mês que existe só em uma das bases.
 # - Divergente = diferença acima de 0,5% do valor medido.
-conexao.sql(
-    """
+conexao.sql("""
     CREATE OR REPLACE VIEW conciliacao_mensal AS
     WITH medido AS (
         SELECT conta_id, competencia, SUM(valor) AS valor_medido
@@ -87,15 +84,13 @@ conexao.sql(
     FROM medido m
     FULL JOIN faturado f
         ON m.conta_id = f.conta_id AND m.competencia = f.competencia
-    """
-)
+    """)
 
 # %%
 # Consulta 1: contas com divergência em MAIS DE UM mês.
 # Os valores medido, faturado e a diferença são somados só nos meses divergentes.
 # Ordenado pela maior diferença absoluta (as mais divergentes primeiro).
-contas_divergentes = conexao.sql(
-    """
+contas_divergentes = conexao.sql("""
     SELECT
         conta_id,
         COUNT(*) AS meses_divergentes,
@@ -109,8 +104,7 @@ contas_divergentes = conexao.sql(
     GROUP BY conta_id
     HAVING COUNT(*) > 1
     ORDER BY ABS(SUM(diferenca)) DESC
-    """
-)
+    """)
 
 contas_divergentes.show()
 
@@ -119,10 +113,11 @@ contas_divergentes.show()
 # valor de consumo somado por produto.
 # Para ver só um produto faltando na fatura, compare com a diferença da consulta 1.
 TOP_N = 5
-conexao.sql("CREATE OR REPLACE VIEW contas_divergentes AS " + contas_divergentes.sql_query())
+conexao.sql(
+    "CREATE OR REPLACE VIEW contas_divergentes AS " + contas_divergentes.sql_query()
+)
 
-consumo_por_produto = conexao.sql(
-    f"""
+consumo_por_produto = conexao.sql(f"""
     SELECT
         t.conta_id,
         t.produto,
@@ -131,16 +126,14 @@ consumo_por_produto = conexao.sql(
     WHERE t.conta_id IN (SELECT conta_id FROM contas_divergentes LIMIT {TOP_N})
     GROUP BY t.conta_id, t.produto
     ORDER BY t.conta_id, valor_medido DESC
-    """
-)
+    """)
 
 consumo_por_produto.show()
 
 # %%
 # Consulta 3: para cada produto e unidade, primeira e última data em que aparece.
 # Usa a tabela bruta (consumo_diario), pois aqui o objetivo é ver a unidade como veio.
-unidades_por_produto = conexao.sql(
-    """
+unidades_por_produto = conexao.sql("""
     SELECT
         produto,
         unidade,
@@ -150,8 +143,7 @@ unidades_por_produto = conexao.sql(
     FROM consumo_diario
     GROUP BY produto, unidade
     ORDER BY produto, primeira_data
-    """
-)
+    """)
 
 unidades_por_produto.show()
 
@@ -160,8 +152,7 @@ unidades_por_produto.show()
 # O lote_id tem o formato L<data>-<sequência> (ex.: L20260514-02): o separador é "-".
 # Lote base = parte antes do "-". Candidatos = lote base que aparece com
 # mais de uma sequência diferente depois do "-".
-lotes_possiveis_duplicados = conexao.sql(
-    """
+lotes_possiveis_duplicados = conexao.sql("""
     WITH lotes AS (
         SELECT
             lote_id,
@@ -184,7 +175,6 @@ lotes_possiveis_duplicados = conexao.sql(
     FROM lotes
     QUALIFY COUNT(DISTINCT sequencia) OVER (PARTITION BY lote_base) > 1
     ORDER BY lote_base, sequencia
-    """
-)
+    """)
 
 lotes_possiveis_duplicados.show()

@@ -161,12 +161,22 @@ O código de saída é `1` se alguma validação falhar, o que permite agendar a
 
 ## Estrutura do repositório
 
-| Pasta/arquivo | Conteúdo |
-|---|---|
-| `data/` | CSVs de origem (fora do Git). |
-| `exploracao_bases/` | Estudos exploratórios das bases. |
-| `exploracao_erro_bases/` | Consultas DuckDB que validam e documentam os erros. |
-| `relatorio_anomalias/` | Relatório de anomalias em PDF. |
-| `sql/` | DDL de referência (Postgres) e views da camada de consumo. |
-| `src/nuvem_br/` | Modelos, transformação, carga e validações do pipeline. |
-| `main.py` | Orquestra o pipeline. |
+```text
+nuvem_br/
+├── data/                           # Arquivos CSV brutos fornecidos
+├── exploracao_bases/               # Estudos exploratórios das bases válidas
+├── exploracao_erro_bases/          # Investigação de inconsistências e problemas
+├── nuvem_br/                       # Código Python do pipeline
+│   ├── config.py                   # Configuração de caminhos e conexão DuckDB
+│   ├── load.py                     # Criação das tabelas e aplicação da camada de consumo
+│   ├── models.py                   # DDL e criação das tabelas
+│   ├── transform.py                # Limpeza, padronização e transformação dos CSVs
+│   └── validate.py                 # Validações e testes de qualidade
+├── sql/
+│   ├── 00_ddl_postgres.sql         # DDL de referência
+│   └── 01_consumo.sql              # Modelo dimensional e métricas de consumo
+├── outputs/                        # Arquivos gerados pelas análises
+├── main.py                         # Orquestração completa do pipeline
+├── pyproject.toml                  # Dependências e configuração do projeto
+├── uv.lock                         # Lock das dependências
+└── README.md                       # Documentação do projeto

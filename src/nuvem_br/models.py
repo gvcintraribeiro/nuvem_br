@@ -57,7 +57,9 @@ class DimData(Base):
     nome_mes: Mapped[str] = mapped_column(String(10))
     trimestre: Mapped[int] = mapped_column(Integer)  # 1 a 4
     dia_semana: Mapped[str] = mapped_column(String(15))
-    numero_dia_semana: Mapped[int] = mapped_column(Integer)  # ISO: 1 = segunda ... 7 = domingo
+    numero_dia_semana: Mapped[int] = mapped_column(
+        Integer
+    )  # ISO: 1 = segunda ... 7 = domingo
     dia_ano: Mapped[int] = mapped_column(Integer)  # 1 a 366
 
 
